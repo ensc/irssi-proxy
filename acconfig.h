@@ -1,20 +1,13 @@
-#undef HAVE_GTK
-#undef HAVE_GNOME
-#undef HAVE_GNOME_PANEL
-#undef SYSCONFDIR
-#undef PLUGINSDIR
-#undef PERLSCRIPTDIR
-#undef GTK_10
-#undef HAVE_SOCKS_H
-#undef HAVE_IMLIB
-#undef MEM_DEBUG
+/* misc.. */
 #undef HAVE_IPV6
-#undef GTK_HEBREW
-#undef GTK_HEBREW_RC
+#undef HAVE_SOCKS_H
+#undef HAVE_STATIC_PERL
+#undef HAVE_GMODULE
+#undef HAVE_GC_H
+#undef HAVE_GC_GC_H
+#undef USE_GC
 
-#undef HAVE_NCURSES_USE_DEFAULT_COLORS
-#undef HAVE_CURSES_IDCOK
-
+/* macros/curses checks */
 #undef HAS_CURSES
 #undef USE_SUNOS_CURSES
 #undef USE_BSD_CURSES
@@ -22,4 +15,20 @@
 #undef USE_NCURSES
 #undef NO_COLOR_CURSES
 #undef SCO_FLAVOR
-#undef NCURSES_970530
+
+/* our own curses checks */
+#undef HAVE_NCURSES_USE_DEFAULT_COLORS
+#undef HAVE_CURSES_IDCOK
+#undef HAVE_CURSES_RESIZETERM
+#undef HAVE_CURSES_WRESIZE
+
+/* terminfo/termcap */
+#undef HAVE_TERMINFO
+
+/* What type should be used for uoff_t */
+#undef UOFF_T_INT
+#undef UOFF_T_LONG
+#undef UOFF_T_LONG_LONG
+
+/* printf()-format for uoff_t, eg. "u" or "lu" or "llu" */
+#undef PRIuUOFF_T

@@ -1,9 +1,16 @@
 noinst_LIBRARIES = libirssi_config.a
 
-INCLUDES = $(GLIB_CFLAGS)
+INCLUDES = \
+	-I$(top_srcdir)/src \
+	$(GLIB_CFLAGS)
 
 libirssi_config_a_SOURCES = \
-	irssi-config.c
+	get.c \
+	set.c \
+	parse.c \
+	write.c
 
-noinst_HEADERS = \
-	irssi-config.h
+pkginc_lib_configdir=$(pkgincludedir)/src/lib-config
+pkginc_lib_config_HEADERS = \
+	iconfig.h \
+	module.h

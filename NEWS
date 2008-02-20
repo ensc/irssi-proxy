@@ -1,3 +1,1563 @@
+v0.8.13
+	+ Support for reading kicks/msgs from TARGMAX/MAXTARGETS 005 tokens.
+	+ Enhancements to the redirections code.
+	+ Support for RPL_WHOISACTUALLY (338 numeric) for both ratbox and ircu
+	  (bug #428).
+	+ -idle option of /notify is gone.
+	+ /layout save now makes window-channel bindings instantly effective
+	  (bug #35).
+	+ /ping without arguments does not send anymore a ctcp ping to a channel
+	  (bug #542).
+	+ Track IRC operator status of nicks a bit better.
+	- Fix mode display in whois with unreal (379 numeric) (bug #479).
+	- Fix regressions that prevented external modules from building/working
+	  (bugs #537 #539).
+
+v0.8.12 2007-10-06  The Irssi team <staff@irssi.org>
+	+ Some changes to character set recoding.
+	+ Rewrite SSL connection/handshake code.
+	+ Remove support for glib 1.x.
+	+ Do not send our hostname to the server (bug #488).
+	+ Add $tag to 'window' item in default configuration.
+	+ Pick up host changes on charybdis and ircu servers (396 numeric).
+	+ Show various errors such as "cannot send to channel" and "cannot
+	  /msg, user is +g" in the channel or query window, if possible,
+	  and always include the user or channel name.
+	+ Channel forwarding in hyperion and charybdis is now recognized
+	  (470 numeric) and the target channel is joined in the window where
+	  the original channel would have been joined.
+	+ Add support for the ACCEPT command, which is part of the CALLERID
+	  server side ignore system in hybrid7 and derived ircds.
+	+ Make /WINDOW GOTO start searching at the window after the active
+	  one and stop at the one before (bug #332).
+	+ Improve completion for /SET.
+	+ Use CASEMAPPING dependent comparison to match channel names.
+	  Patch by Jon Mayo (bug #436).
+	+ Various improvements to the help files.
+	+ Add Perl bindings for some gui_entry methods
+	+ Make alt/meta+arrow keys work in recent versions of xterm (bug #496)
+	- Fix DCC get when file size is 0 (bug #494).
+	- Ignore empty lines when pasting.
+	- Fix large file support on AIX (bug #404).
+	- Remove broken code that prevents unloading of a script in some cases.
+	- Fix logging lines with no target to all logs, broken in 0.8.11.
+	- Fix casemapping dependent nick and channel matching (bug #436).
+	- Update chanop flag before emitting nick mode changed signal (patch
+	  by Johan Kiviniemi)
+	- Fix recognition of realnames starting with spaces in /WHO.
+	- Show "Target left IRC" error messages fully (instead of reporting
+	  no such nick "*")
+	- Repair channels_rejoin_unavailable. Enabled by default, this retries
+	  joins that failed because of netsplits (channel temporarily
+	  unavailable (437), duplicate channel). A few servers abuse 437 for
+	  juped channels which should not be retried, you should disable
+	  channels_rejoin_unavailable if this is a problem.
+	- Display 437 and 407 numerics if channels_rejoin_unavailable
+	  is not enabled (bug #495).
+	- Don't add the same mask to the /KNOCKOUT list multiple times
+	  (bug #510).
+	- Use MSGLEVEL_NICKS again for printing a nick change in queries,
+	  broken in r2389.
+	- Fix some /LASTLOG -before/-after issues.
+	- Some fixes to the build system.
+	- Fix paste sending the first line twice (bug #405)
+	- When parsing a numeric option verify that the whole argument, rather
+	  than only the first character, is numeric.
+	- Some fixes for notices, actions and ctcps to @#channel and +#channel
+	  (bug #46)
+
+v0.8.11 2007-04-25  The Irssi team <staff@irssi.org>
+	+ Add completion for /WINDOW GOTO
+	+ New crapbuster-like "scrollback levelclear" command
+	+ irssi now aborts a connection when, on an attempt to connect, the server
+	  returns code 432 (Erroneous Nickname), bug #425
+	+ Allow identifiers in config file to start with a digit, bug #177.
+	+ Modify Irssi::UI::Window::command to restore the original active window
+	  only if the command executed has not made another one active, bug #403.
+	+ Make awaylog_file respect --home, bug #304
+	+ Send /QUOTE immediately if server didn't send the 001 event yet
+	+ If dcc_own_ip contains IPv4 address, listen only in IPv4
+	+ Negative scroll_page_count scrolls screensize-n lines
+	  (Patch by Chris Moore)
+	+ Sort nicks with custom prefix by the order defined in isupport in /NAMES
+	+ New perl command send_raw_first, patch by ComradeP (Bug 413)
+	+ Let the module loader also check for fe_common_$protocol files
+	+ Don't wait for all /NAMES replies before syncing if we can't combine
+	  queries anyways (Patch by jilles)
+	+ Renamed irc.efnet.net to irc.efnet.org
+	+ /SCROLLBACK CLEAR accepts the same arguments as /CLEAR
+	+ Check if binary exists and can be executed before /UPGRADE
+	+ Change default value of override_coredump_limit to OFF
+	+ UPTIME command by Lauri Nurmi with some modifications (Bug 458)
+	+ Remove CR and LF from Perl commands, to make it harder to introduce a
+	  security bug
+	+ Remove bookmark on a line when line is removed (instead of moving it)
+	+ Don't fallback to generic word completer if the command specific
+	  completion list is not empty.
+	+ Recognize cursor left and cursor right sequences sent by recent xterm
+	- Fix some UTF-8 issues, bugs #452 (Patch by Yi-Hsuan Hsin), #459, #460
+	- Fixed segfault on quit introduced in 0.8.10
+	- Fixed a bug where tab-completion didn't work with utf8/big5 properly
+	- Ignore joins without a nick from broken servers
+	- Fix whois_hide_safe_channel_id: only look at the beginning of a channel
+	  name, not in the middle
+	- Don't assume that 7bit ascii strings are encoded in UTF-8, only
+	  validate the strings when they contain octest with highest bit set
+	  (patch by Mikko Rauhala)
+	- Make random really random when resolving
+	- Don't get confused by a join command with too many arguments, keys
+	  can't have spaces in them (Bug 437)
+	- Don't crash on /QUIT with scripts causing and catching signals on UNLOAD
+	- Fix %k and %K mappings in curses frontend
+	- Fix bold on monochrome terminals in terminfo frontend
+	- Fixed colors with TERM=xterm-{88,256}color in terminfo frontend
+	- Fix crash with one line high terminal in terminfo frontend
+	- Fix building with srcdir != builddir
+	- Don't get confused and keep saying "Netsplit over" on every join for
+	  user that only rejoined some channels
+	- Fix crash in /EXEC (Bug 439)
+	- Fix format string in printtext_dest call from Perl, patch by loafier
+	- Fix memory leaks in expandos_deinit by Nicolas Collignon (Bug 419)
+	- Detect off_t size using AC_CHECK_SIZEOF because it works also when
+	  cross-compiling in autoconf-2.50 and higher
+	- Fix failed assertion when the config file is unreadable, patch by
+	  Daniel Koning (Bug 164)
+	- Removed automatic glib downloading and compiling.
+	- Fix /FORMAT -delete daychange so it doesn't print an empty line
+	- Forbid /WINDOW SHOW when the target window is sticky rather than when
+	  there is a window bound to the container of the target window.
+	- Improve interaction between autolog and non autolog logs
+	- Recognize local oper mode on ircnet (mode +O)
+	- Properly initialize reference count for a new setting (Bug #235)
+
+v0.8.10 2005-12-11  The Irssi team <staff@irssi.org>
+
+	* Long delayed release, with lots of changes. Most important ones:
+	    + Recode support, by decadix and senneth
+	    + isupport (005 numeric), by David Leadbeater
+	    + Passive DCC support, by Francesco Fracassi
+	    - Many memleak fixes, by Toby Peterson
+
+	+ Moved to subversion
+	+ /SET paste_join_multiline ON - When paste detection is enabled and
+	  you paste lines which look like they're being copy&pasted from irssi
+	  itself, it attempts to merge lines said originally in a single line.
+
+	  How this really works is that all indented lines must have the same
+	  amount of indentation. Indented lines are merged to last
+	  unindented line. If line gets longer than 400 characters, it's split.
+	+ /SET whois_hide_safe_channel_id ON - Hides the channel ID prefix
+	  of !channels in WHOIS replies
+	+ When reconnecting to server, say that it can be aborted with
+	  /RMRECONNS
+	+ /WHOIS -<server tag> is supported now
+	+ /SET whois_hide_safe_channel_id - removes the ugly IDs for !channels
+	  in /WHOIS (default)
+	+ If we can't connect to server using given own IP, show the IP to
+	  user in the error message. Should help figuring out wrong
+	  /SET hostname or /SERVER -host settings.
+	+ If channel has more nicks than /SET channel_max_who_sync, don't ask
+	  /WHO list to avoid getting kicked out of server (Max SendQ exceeded).
+	+ /LOAD script.pl loads the perl script
+	+ /IGNORE -network ignores only on specified network
+	+ /SET use_status_window and /SET use_msgs_window make the effects
+	  immediately
+	+ Changed the confusing "ircnet" to "network" everywhere
+	+ Don't autoget files sent to channels, unless dcc_autoget_masks is set
+	+ Added a default "*" target which matches everything on the server,
+	  including NULL items associated with it, by jimmy
+	+ /UPGRADE now saves server->version
+	+ If available, send who set topic and when to irssi-proxy clients
+	+ Cleaned up network list: removed smaller networks, added QuakeNet
+	+ New default aliases: MANUAL-WINDOWS, EXEMPTLIST and ATAG
+	+ Recode support: /RECODE for manipulation of the conversion database.
+	  Setting "term_type" has been renamed to "term_charset".
+	  /SET recode OFF to disable recode completely.
+	  /SET recode_out_default_charset <charset> to specify the default
+	  outgoing charset.
+	  /SET recode_fallback <charset> to specify a charset that will be
+	  used when the normal conversion is failing.
+	  /SET recode_transliterate ON to enable character transliteration,
+	  so unavailable characters will be transliterated into something
+	  readable
+	  <charset> can be almost everything listed by 'iconv -l'
+	+ Added transpose_words, capitalize_word, downcase_word, upcase_word
+	  key bindings
+	+ Avoid accidentaly /VER in a channel, by requiring parameter
+	- Pasted lines weren't added to command history. Some other paste
+	  detection fixes
+	- Fixed /BIND escape_char
+	- Fixes for Chinese multibyte characters handling and cursor movement
+	  by Wang WenRui
+	- Pasting multibyte chars was buggy, patch by Kuang-che Wu
+	- Fixed handling WHOIS printing once and for all. Everything unknown
+	  between "beginning of whois" and "end of whois" events is now printed
+	  as whois_special. Removed whois_registered and whois_help, they're
+	  printed with whois_special as well.
+	- Don't replace channel key when receiving channel mode numeric. It
+	  could be a fake key there.
+	- Don't crash if dcc chated user changes nick
+	- Help files are always lowercased. Make sure /HELP COMMAND works too.
+	- /EXEC crashed with 64bit systems. Patch by Soren Jacobsen
+	- Handle 432 numeric (errorneus nickname) as "nick in use". Fixes
+	  problems with ircnet 2.11 ircd when irssi tries to reconnect using
+	  UID as nick. Patch by Petr Baudis
+	- /SET -default fixes
+	- /DCC SEND didn't actually use /SET dcc_upload_path
+	- Fixed /WHOIS -yes (Bug 67)
+	- Make /JOIN -tag #channel and /JOIN #channel<space> switch to that
+	  channel (Bugs 13 and 93)
+	- Fixed readded (changed) hilights being in config twice, resulted in
+	  duplicate hilights or removed hilights coming back (Bug 39)
+	- Fixed messages to @#channel showed *your* nickmode, not the one of
+	  the sender (part of Bug 80)
+	- Fixed /KNOCK support
+	- Fixed own nick changes in irssi-proxy
+	- Fixed /HILIGHT -actcolor -mask (Bug 131)
+	- Recognise a param of signal_emit/continue in perl script if it's int
+	- Fixed bug 120 where proxy doesn't set the server_rec->away_reason
+	- Fixed /join -invite -window bug if there is no invite
+	- Fixed bug with time settings where hours actually returned 60*hours
+	- Fix multiple entries for local IP in /etc/hosts prevents connecting,
+	  patch by eridius (Bug 167)
+	- Fixed a bug with /me, use the right arguments for
+	  "message irc own_action"
+	- Update our own nickrec->gone flag on /away <reason> or on /away
+	- Fixed output of /hilight (add a space after -levels if any)
+	- Add libtool's -module flag to get built properly on all platforms,
+	  by Toby Peterson (Bug 212)
+	- Don't apply emphasis on _foo_^ if it's a nick (Bug 52)
+	- Fix displaying of ctcp userinfo and clientinfo (Bug 222)
+	- Remember alternate_nick and max_whois on reconnect (Bug 181)
+	- Fix tr_TR locale problem for glib2 (still a bug with glib1.2)
+	  by David Pashley
+	- Fixed pasting not using the character translation (Bug 151)
+	- Fixed a bug where the channel list to join/rejoin on reconnect
+	  gets too long, not all channels will be joined. (Bug 108)
+	- Print glib errors nicely, by David Pashley
+	- Handle ^Z better, by David Pashley
+	- Fixed /eval recursion crashing, by David Pashley
+	- Fix notify with more nicks than max_whois_in_cmd (Bug 257),
+	  based on patch by Krzysztof Kowalik (Borys)
+	- Fixed irssiproxy sometimes missing (parts of) lines
+	- Fixed remote /WHOWAS
+	- Parse negative time setting values, makes it possible again to do
+	  /SET server_reconnect_time -1 to disable reconnecting
+	- Compile with gcc4
+	- Compile with readonly srcdir
+	- Fixed crash if receiving broken privmsg without source
+	  (which bitlbee can send if you msg yourself)
+	- Fixed crash with invalid TERM and termcap
+	- When looking up IP addresses, return random IP instead of the first one
+
+v0.8.9 2003-12-11  Timo Sirainen <tss@iki.fi>
+
+	* Fixes a remote crash with:
+	    a) non-x86 hardware (one requiring memory alignmentation)
+	    b) script using "gui print text" signal (with x86 hardware too)
+
+	+ /SET auto_whowas OFF allows now disabling automatic /whowas when
+	  /whois doesn't find a nick (by Borys)
+	- If pasted line starts with command char, treat it as command always.
+	  Paste detection can go on too easily with lagged connections.
+
+v0.8.8 2003-11-23  Timo Sirainen <tss@iki.fi>
+
+	- Just a few fixes to converting old settings automatically
+
+v0.8.7 2003-11-23  Timo Sirainen <tss@iki.fi>
+
+	* Settings changes - we have now "time", "size" and "level" setting
+	  types.
+	    - Level settings should work the same as before.
+	    - Time settings can have units: days, hours, mins, secs,
+	      milliseconds (or msecs). The units can be combined and written
+	      in shorter form as well, for example "5d 30m 10ms"
+	    - Size settings can have units: gbytes, mbytes, kbytes, bytes.
+	      They can be written in shorter form as well, eg. "gb" or "g".
+
+	  Your existing settings should be converted automatically.
+
+	+ Pasting detection. All keys except CR and LF are pasted as-is into
+	  prompt in pasting mode.
+
+	  /SET paste_detect_time controls how closely each others characters
+	  must occur for it to be considered pasting. Paste mode goes on when
+	  first pasted CR/LF is found.
+
+	  The first line may also contain some command characters. They are
+	  executed, but their action in entry line is reverted once pasting
+	  is detected.
+
+	  What this means in practise is that even if you have TABs (assuming
+	  TAB is completion key) in the first pasted line, they get pasted as
+	  TABs.
+
+	  This detection isn't perfect, so if it annoys you it can be disabled
+	  with /SET paste_detect_time 0
+	+ If pasting more lines than /SET paste_verify_line_count, irssi asks
+	  if you actually want to do that. This should be useful to prevent
+	  accidental copy&paste mistakes. Setting it to 0 disables this
+	  entirely.
+	+ Support for sending SSL certificate to server and optionally verify
+	  server's certificate. See the -ssl_* options for /SERVER and
+	  /SERVER ADD. Patch by Joel Eriksson.
+	+ DCC SERVER support by Mark Trumbull
+	+ Support for DCC sending larger files than 2GB if supported by
+	  operating system (ie. 64bit file support). Receiving has always
+	  been possible, but the statistics were wrong with >4GB files
+	  if 64bit support isn't enabled.
+	+ Better displaying of DCC file transfer statistics.
+	- Several other minor fixes and enhancements, see ChangeLog
+
+v0.8.6 2002-11-17  Timo Sirainen <tss@iki.fi>
+
+	* Tons of changes, here's only the largest that come to my mind now:
+
+	+ SSL support by vjt@users.sf.net
+	+ DCC send queues by Heikki Orsila
+	+ Better support for !channels
+
+v0.8.4 2002-03-13  Timo Sirainen <tss@iki.fi>
+
+	* Continuing to fix my stupid mistakes...
+
+	- When a queried nick did a nick change, it might have crashed irssi
+	- read ChangeLog for some other minor changes
+
+v0.8.3 2002-03-13  Timo Sirainen <tss@iki.fi>
+
+	- Perl scripts handling channel parts/kicks/quits printed some
+	  errors.
+	- Connecting to IPv6 servers without IPv4 record didn't work
+	- When queries were auto-created by you using /MSG and you had
+	  /SET autoclose_query non-zero, the query was always destroyed
+	  almost immediately.
+	- Fix to some stupid ircds not sending us 001 numeric, but
+	  beginning from MOTD
+
+v0.8.2 2002-03-11  Timo Sirainen <tss@iki.fi>
+
+	* Changed the list of scripts distributed with irssi. Separated
+	  example scripts to scripts/examples/ directory.
+
+	* Hated infobar was removed, the same info is now in topicbar in
+	  empty windows. I don't think it would disturb anyone in there.
+	  If you still preferred always-empty topicbars, use
+	  /SBAR topic REMOVE topic_empty
+
+	+ Added info_eol field to theme. If true, timestamp and server tag
+	  are added to end of line, not at beginning.
+	+ If -4 or -6 option is used with /SERVER, irssi now forces the
+	  connection using the given protocol or fails.
+	+ /SET max_wildcard_modes (default 6) - if a wildcard to /OP, /DEOP,
+	  /VOICE or /DEVOICE matches more nicks than this, -yes option is
+	  required. This is trying to prevent accidental massops. Setting
+	  it to 0 disables this check.
+	+ Supports now correctly servers which use '.' char as channel owner
+	  character in /NAMES list. Also supports multiple mode chars, eg.
+	  @+nick (if some server actually used it).
+	+ Never ignore kick message if you get kicked from channel.
+	+ Sending irssi SIGHUP now does a /RELOAD - useful if you
+	  accidentally messed up something which doesn't let you do the
+	  /RELOAD inside irssi (eg. /SBAR prompt DISABLE).
+	+ irssi-proxy: PROXY CTCP ON|OFF - proxy clients can send this
+	  command to specify that they want to handle the received CTCP
+	  requests. Useful for specifying who gets to handle DCCs.
+	+ Added escape_char /BIND command. The next char after that would be
+	  added as-is to input line.
+	- Writing lines longers than 1024 chars to input buffer crashed
+	  irssi (stupid missing sizeof() bug :)
+	- Some UTF-8 fixes
+	- Better flood protection for lines with >100 chars
+	- Control characters aren't printed as-is in topicbar (or statusbars
+	  in general) anymore
+	- /OPER can be now aborted by giving empty password
+	- Netjoin messages were buggy in +channels
+	- Part message parameter for /CYCLE was never used.
+	- Don't send -autosendcmd after /UPGRADE.
+	- /SET autoclose_query - now only last received private message
+	  affects when the query is closed, ie. /WHOIS requests or nick
+	  changes don't reset the counter.
+	- Foreground ANSI colors weren't working
+	- Deleting one character replaced cutbuffer with that character.
+	  Also ^Y leaked memory.
+	- /SCRIPT LOAD looked scripts from prefix/lib dir, not prefix/share
+	  where they were actually installed.
+	- Highascii chars in replaces block in theme files could have
+	  crashed irssi.
+
+v0.8.1 2002-02-17  Timo Sirainen <tss@iki.fi>
+
+	* Expected bugfix release :) Worst thing was that I forgot always to
+	  debug why /cat /dev/urandom crashed irssi. Well, found two ways
+	  that could make it happen.
+
+	- Irssi was linked with -lcurses AND -lncurses
+	- Logging could have produced GLib errors with certain conditions
+	- A few compiler warnings fixes
+
+v0.8.0 2002-02-17  Timo Sirainen <tss@iki.fi>
+
+	* I really should make releases more often. Once in every two weeks
+	  used to be nice. Maybe once in a month would be good now. There
+	  was many reasons why this release took this long .. first being
+	  addicted to books, then life stuff, then it took forever to figure
+	  out that irssi was crashing under solaris (and not because of one
+	  of the big changes I made while moving to IRC from solaris box).
+
+	  And now.. well, after this release I'll start working more with
+	  the yet another irssi rewrite :) The code is getting too ugly
+	  again, and some things need rewriting to support some new features
+	  more easily. It will take a while to get it all done, so I'll try
+	  to keep updating this "stable" irssi as well.
+
+	  There's too many changes since 0.7.98.3 (and .4 which was just
+	  minor bugfix), about 6600 lines in ChangeLog. I'm not going to
+	  read all that, so I'll just list the biggest changes that I can
+	  remember now.
+
+	  This version was supposed to be called 0.7.99, but since there
+	  were so many changes, and I originally though of putting 0.8.0
+	  out long time ago, and 0.7.100 would look stupid, I guess it's
+	  time for 0.8.0 :)
+
+	+ /UPGRADE - upgrade irssi to new version on-the-fly without
+	  disconnecting from server, so other people won't even notice you
+	  quit from IRC. This ONLY executes the new binary, it does NOT
+	  download/compile/whatever irssi.
+	+ UTF-8 support with /SET term_type UTF-8, default is "8bit".
+	  It's also automatically detected from system locale (if supported).
+	+ Fully configurable statusbar. Yes. FULLY. Don't bother asking if
+	  something could be done with it, it can, just ask how. Well,
+	  there's a few things I didn't have time/energy to finish:
+	  window-specific statusbar groups and support for multiple input
+	  lines in screen.
+	+ Rewritten keyboard handling. No more the CTRL-X and ALT-x handling,
+	  now you can create whatever keyboard combinations your terminal
+	  can send to irssi.
+	+ Rewritten text buffer (scrollback) handling.
+	+ Irssi doesn't depend on curses anymore, so it can be installed
+	  anywhere a working terminfo/termcap exists. This also allows us to
+	  use all the possible colors terminal has (curses limits to 64), so
+	  eg. %0 is now always black background, not the default terminal
+	  background (%n).
+
+	  Several systems have also terminfo/termcap database that doesn't
+	  support colors, so I've added /SET term_force_colors option to
+	  force ANSI-style colors. Note that eg. BitchX does this by default.
+
+	  Getting rid of curses allows also one great thing for you people
+	  copy&pasting long urls :) If a long word gets split to two lines,
+	  doubleclicking the word selects it from both lines.
+	+ Rewritten server event redirections. Before it was pretty easy to
+	  mess up irssi's expectations of what server sends, and some things
+	  might have stayd in the buffer forever. Especially notify lists
+	  messed up /WHOIS requests for the notified people. Now all this
+	  should be history and it's a lot easier for scripts to use the
+	  redirections as well.
+	+ New ICB chat protocol plugin - very basic and doesn't support
+	  nicklist, but works. :)
+	+ --home and --config parameters to specify alternate ~/.irssi
+	  directory or config file.
+	+ Scripts can be unloaded separately with /SCRIPT UNLOAD. You can get
+	  a list of runnning scripts with /SCRIPT.
+	+ /SERVER PURGE [<target>] - purge the output buffer (for given
+	  target). Useful for example if you accidentally paste 100 lines :)
+	  The buffer is automatically purged if you get kicked from channel,
+	  or if you /PART the channel and there's more than 10 lines in
+	  output buffer.
+
+v0.7.98.3 2001-03-17  Timo Sirainen <tss@iki.fi>
+
+	* Highlighting changes: /HILIGHT -color, /SET hilight_color and
+	  /SET hilight_act_color don't accept the numeric color value
+	  anymore, the colors must be the %code format (see the beginning
+	  of docs/formats.txt). The color can also have background and
+	  underline/blinking set (%F%Y = blinking yellow)
+
+	* Statusbar rewrite: Statusbar should finally work well when
+	  there's not enough space for it in screen. Least important items
+	  start shrinking/disappearing before more important ones, activity
+	  list should be always fully visible now.
+
+	  /SET statusbar_xxx settings have been removed, everything is
+	  configurable from theme now. Even the texts in the statusbar
+	  items. See end of default.theme.
+
+	  FULLY configurable statusbar with possibility to create your own
+	  items and support for multiple lines will hopefully come soon.
+
+	+ /WINDOW CLOSE [<first> [<last>] - you can close multiple
+	  windows at once now.
+	+ Emphasis work with actions now
+	+ If there's any unknown settings in your configuration file, irssi
+	  asks at startup if they should be removed.
+	+ All abstracts in theme files now default to same as in
+	  default.theme, so you may override only those you want to change
+	  leaving the rest commented out.
+	- Irssi crashed when specifying vhost to use (not always?)
+	- Fixed one nasty usage of already free'd memory. Hopefully solves
+	  some weird crashes?
+	- Some perl fixes, Irssi::Nick and "massjoin" signal didn't work
+	  properly which broke all auto-op scripts.
+	- If one server fails because of DNS error, don't stop reconnecting
+	  to entire chatnet.
+	- Updated default config to have max_query_chans=1 in undernet to
+	  avoid those channel syncing problems.
+	- /SERVER didn't autojoin channels if it was used when you weren't
+	  connected to any other servers
+	- /CONNECT -ircnet didn't load ircnet specific settings correctly
+	- /SET scroll_page_count - don't crash if /0 is given. Works now
+	  properly if /0.xx is given.
+	- ^O did reset only colors, not underlines etc.
+	- Several fixes with handling blinking text
+	- Irssi crashed almost immediately with NetBSD/Alpha, fixed. Still
+	  not sure if it was compiler bug or is my code just non-standard C.
+	- Reconnecting in IPv6 server shouldn't change to IPv4
+	- Irssi proxy didn't work properly with systems where irssi was
+	  compiled with --enable-ipv6 but OS didn't support IPv6
+
+v0.7.98.2 2001-03-04  Timo Sirainen <tss@iki.fi>
+
+	+ /LASTLOG: added -case option for case-sensitive matching.
+	  -force option is now required to print lastlogs longer than
+	  1000 lines.
+	+ /BANTYPE -> /SET ban_type. /BAN: -type option added to override
+	  default ban type.
+	+ /NAMES: -ops -halfops -voices -normal options added.
+	  /NAMES without parameters now prints nicklist in active channel,
+	  /NAMES ** shows all nicks in all channels.
+	+ delete_next_word key implemented, patch by Tinuk
+	+ /SET beep_when_window_active - works with /SET beep_msg_level,
+	  should we beep when the msg is printed to active window. If msg
+	  is printed to some other window it always beeps.
+	+ /JOIN #channel and /QUERY nick won't anymore automatically move
+	  channel/query to active window but send a notice to user how to
+	  move it. This was confusing people who did it accidentally.
+	+ /SET autostick_split_windows (default ON) - should we do
+	  /WINDOW STICK ON to all new split windows and hidden windows that
+	  are created inside it. This hopefully makes it easier to use split
+	  windows.
+	- All IPv6 problems are hopefully fixed. Everything now keeps both
+	  v4 and v6 addresses in memory and at connect() time it's decided
+	  which one should be used.
+	- /IGNORE * level printed GLib error. /RELOADing printed some
+	  unignore texts. Autoignores had some problems.
+	- Using /LAYOUT SAVE with split windows crashed irssi at startup
+	  when it tried to restore them..
+	- /WINDOW SHOW command didn't work properly
+	- /LAST -clear crashed if window contained only lastlog lines.
+	  Beeping after /LAST -clear also could have crashed.
+	- HILIGHT level didn't work with logs.
+	- /SET prompt - if $T (target) had %c or something in it, it
+	  shouldn't be treated as color code. So color codes can now be
+	  used in /SET prompt string itself, but in none of the $variables
+	  it uses.
+	- Generated help files had joined lines in chapter together but
+	  didn't add spaces between lines.
+	- Statusbar could have gotten to endless loop when trying to give
+	  more space to some item when there was no more available space.
+	- When /SET autoclose_windows is ON, don't destroy windows if they
+	  have some level set (like /join -w + /part in status window)
+	- If GLIB was unpacked to irssi directory, make install tried to
+	  install it also.
+	- Always save theme to ~/.irssi/ no matter where it was read from.
+	- If /SET names_max_width was too low, irssi crashed
+	- /CONNECT -ircnet "" - even if someone does this don't make the
+	  server tag empty :)
+	- /QUERYing #channel that was already /JOINed crashed irssi after
+	  a while
+	- /SET -clear printed GLib error when done to boolean settings
+
+v0.7.98.1 2001-02-22  Timo Sirainen <tss@iki.fi>
+
+	- fixed stupid remote crash with nick_match_msg()
+
+v0.7.98 2001-02-22  Timo Sirainen <tss@iki.fi>
+
+	* Theme files aren't fully compatible with old ones, there's a few
+	  naming changes and some new items. Added lots of comments and help
+	  to default.theme, so creating themes should be a bit easier now :)
+
+	* Perl scripts aren't compatible with old ones anymore. Biggest
+	  change is that $object->values()->{xxx} calls are now just
+	  $object->{xxx}, but there's a lot of other changes as well.
+	  docs/perl.txt is now up to date so you may want to read it.
+
+	* Several settings have changed their names:
+	    /SET beep_on_msg -> beep_msg_level
+	    /SET activity_levels -> activity_msg_level
+	    /SET hilight_levels -> activity_hilight_level
+	    /SET noact_channels -> activity_hide_targets
+
+	+ /SET prompt, /SET prompt_window - Specifies the text in prompt.
+	  'prompt' is used when channel or query is active in window and
+	  'prompt_window' is used with empty windows. You can also use
+	  % color codes in prompt.
+	+ /EXEC - rewrote it, has now all the same features as EPIC and a
+	  few more, like "interactive shell in window" support. See
+	  /HELP exec for information.
+	+ /SAVEWINDOWS renamed to /LAYOUT SAVE. Added /LAYOUT RESET.
+	  /LAYOUT SAVE now saves split windows and queries properly.
+	  Windows that contain saved channels are never used for anything
+	  else (ie. if the saved channel isn't joined, no other channels
+	  can be joined to the window)
+	+ /WINDOW SERVER: added -sticky and -unsticky options. If window
+	  server is sticky, it will never be automatically changed, and it
+	  cannot be changed to anything else without -unsticky option.
+	  Should be useful for people who want status or msgs windows for
+	  each server.
+	+ /WINDOW STICK [ON|OFF|<ref#>] - stick window to specified split
+	  window. After setting window to sticky non-sticky windows can't
+	  replace the active sticky one. Each split window can have it's own
+	  sticky window group.
+	+ /WINDOW LEFT, /WINDOW RIGHT - Go to previous/next window in the
+	  current sticky window group, or if there's no sticky windows go to
+	  previous/next non-sticky window. Alt-Left/Right keys default to
+	  these commands now.
+	+ /WINDOW NUMBER: -sticky option added. Closing windows before a
+	  sticky window won't change refnum of the sticky window and windows
+	  after it.
+	+ /SET windows_auto_renumber - should window refnums be packed when
+	  some window is destroyed in the middle
+	+ /SET scroll_page_count - how many lines to scroll with pgup/pgdn.
+	  either an absolute value, or if the count starts with '/', it's
+	  calculated as lines_in_screen/count. The default is /2.
+	+ /SET timestamp_format specifies the format to use with timestamps
+	  in "man strftime" format.
+	+ Emphasis (*word*, _word_) replacing works better now. It doesn't
+	  try to change nicks or any non-words. This time people might want
+	  to actually use it :)
+	+ Nick completion logic changes, should work better now. Changed
+	  meaning of /SET completion_keep_publics to be number of publics
+	  to keep instead of time to keep them.
+	+ /HILIGHT: Added -priority option (deciding which color should stay
+	  in activity list), /SET hilight_level to specify the default level
+	  for /HILIGHTs. -word option renamed to -full. Added new -word
+	  option meaning to highlight only the found word in line. Removed
+	  -nonick option but added -line which means pretty much the same.
+	  -actcolor specifies what color to show in activity list, default
+	  is the same as -color or if there's no -color it defaults to
+	  /SET hilight_act_color. Colors can have background color set with
+	  fg,bg. Works with activity list too, useful for example blinking.
+	+ DCC rewrite. File names with spaces work properly, you can have
+	  multiple dcc chats with same people (or more useful, same nick in
+	  different ircnets), /DCC CHAT|GET|RESUME with no arguments accepts
+	  the last request, notifies if dcc request was sent to channel,
+	  warns about connecting to lowports, /SET dcc_autoget_lowports
+	  specifies if autogetting should work with lowports, complains of
+	  invalid DCC CTCPs instead of ignoring, /SET dcc_autoresume is like
+	  dcc_autoget except resumes the files if possible.
+	+ /NAMES can print columns with different widths now. You can change
+	  the max. width with /SET names_max_width and /SET names_max_columns
+	  settings. Default is max. 6 columns.
+	+ /LASTLOG: Added options -file <filename> for writing lastlog to
+	  file, -window <ref#|name> for specifying which window's lastlog to
+	  print (output is always to active window) and -clear option to
+	  remove all lastlog lines from window.
+	+ /OPER [<nick> [<password>]] - syntax changed. If password isn't
+	  given, it's asked.
+	+ /FOREACH server|channel|query|window <command>
+	+ /UNBAN <ref#> works. /BAN list shows reference numbers.
+	+ /PERL <code> - runs perl code (like /PERL Irssi::print "hello")
+	+ /CLEAR -all - clear all windows
+	+ /KICKBAN and /KNOCKOUT accepts multiple nicks separated with commas
+	+ /SET theme - says what theme was changed to, and complains if
+	  theme wasn't found. Setting theme's name to "xxx.theme" now works,
+	  too many people tried it with the .theme suffix :)
+	+ /WHOIS without parameters in query does now same as
+	  /WII <queried nick>
+	+ IPv6 updates: /CONNECT, /SERVER, /SERVER ADD: added -4 and -6
+	  options for specifying if we should connect to IPv4 or IPv6 address
+	  of the server. If -host or /SET hostname is set, irssi determines
+	  from it if it should use IPv4 or v6. If irssi still isn't sure of
+	  it, it fallbacks to /SET resolve_prefer_ipv6
+	+ Logs and rawlogs write to files through special "write buffer". By
+	  default everything gets written immediately, but you can make it
+	  wait until there's specified amount of data in buffer or write once
+	  in a hour or so. Useful for people who want to keep hard disk at
+	  sleep at nights but still want to log. /SET write_buffer_mins and
+	  /SET write_buffer_kb specifies when to flush the buffer.
+	  /FLUSHBUFFER flushes it immediately.
+	+ LOTS of other smaller things that should make your life easier :)
+	- /SET dcc_autorename OFF didn't work before.
+	- Irssi compiled with IPv6 support didn't work properly with some
+	  operating systems.
+	- Theme saving to home dir didn't work correctly if globaldir
+	  already had the same theme.
+	- If log file locking failed, irssi always assumed it was locked
+	  while it could have been because filesystem didn't support locking
+	  or some other problem..
+
+v0.7.97 2000-12-03  Timo Sirainen <tss@iki.fi>
+
+	* Added templates for themes - this allowed separation of the
+	  actual texts and styling/coloring. See default.theme file for
+	  more information. You should remove your old ~/.irssi/default.theme
+	  or at least merge it with the defaul.theme.
+
+	* If GLIB sources are found unpacked from some subdirectory, always
+	  compile it and use it even if GLIB is already installed somewhere
+	  else.
+
+	+ /SCROLLBACK REDRAW - redraw contents of current window according
+	  to active formats, ie. changing theme updates the scrollback.
+	  This requires /SET scrollback_save_formats ON.
+	+ /SET log_theme <theme> - you can specify what theme to use for
+	  writing texts to log file.
+	+ /WAIT [-<server tag>] <milliseconds> - wait for <milliseconds>
+	  before sending anything else to server
+	+ /EXEC <command> - execute command and print it's output (stdout
+	  only) to screen. (by Tinuk)
+	+ Don't indent the next line when long word is split, this should
+	  help a bit when copying long URLs.
+	+ Remember who set the topic and when, display the info when using
+	  /TOPIC.
+	+ /SET emphasis - convert _underlined_ and *bold* words (and phrases)
+	  to use real underlines/bolds. (by tommik)
+	+ While waiting for more netsplits/netjoins, if anything else is
+	  printed to screen, print the current netsplit/netjoin messages
+	  before that text.
+	+ Print multiple identical mode changes in one line
+	  (mode +o nick by nick1, nick2, nick3)
+	+ /WINDOW ITEM GOTO <name> - sets <name> active in current window
+	+ /WINDOW ITEM MOVE <window#>|<name> - moves window item to another
+	  window.
+	+ /SET autocreate_windows - should we create new windows for new
+	  window items or just place everything to one window
+	+ /JOIN #already_joined_channel, /QUERY already_queried_nick - same
+	  as /WINDOW ITEM MOVE <name>
+	+ /SET activity_level, /SET hilight_level - specifies which message
+	  levels should be treated as msg/hilight activity. (by tommik)
+	+ DCC queries are now created automatically only if /SET
+	  autocreate_query_level has DCCMSGS level
+	+ If other side replies to our DCC CHAT request with DCC CHAT
+	  request of their own (maybe we were inside firewall and other
+	  side noticed it), connect to it immediately.
+	+ Don't allow more than one identical DCC request, if more is
+	  received just update the port of the previous request.
+	+ Added KILL handling - user/server kills are now printed formatted.
+	+ If server KILLs you, connect back (almost) immediately (don't wait
+	  for the default 5 minutes)
+	+ Nick completion now completes nicks from all channels in active
+	  window, except when completing the first word in line only nicks
+	  in active channel are completed.
+	+ /SET show_nickmode_empty - when nick has no mode, should we
+	  display " " or ""
+	+ /SET part_message - default message with /PART
+	+ Added -current, -window and -level options to /ECHO
+	+ Ctrl-T = transpose_characters
+	+ Perl scripting supports now printformat(), ie. user can change
+	  the text format with /FORMAT just like any other formats.
+	+ Proxy plugin now supports multiple servers, blocks CTCPs from
+	  clients behind it and if one client sends message to channel,
+	  other clients + proxy itself also receives the message.
+	- Netsplit/netjoin printing fixes. Sometimes netsplits were hidden
+	  completely and some netjoins were forgotten and printed as normal
+	  joins instead.
+	- Lag checking broke sometimes when nick was changed
+	- Don't close non-autolog logs when leaving channel / closing query.
+	- Time formats didn't work in directory name of autologs.
+	- Sometimes join to channel didn't ever get synced.
+	- IPv6 support didn't work correctly with all non-Linux OSes.
+	- Lots of minor fixes and changes to make your life easier.
+
+v0.7.96 2000-10-19  Timo Sirainen <tss@iki.fi>
+
+	* new configure option: --disable-curses-windows. Use this if curses
+	  always redraws the window when scrolling. This is a weird problem,
+	  I'd like to know why it happens. :)
+	* Log settings are incompatible with previous versions. You'll need
+	  to setup them again. Or the targets are actually the only ones
+	  that irssi won't read correctly.
+	* Lots of moving and cleaning and rewriting stuff from irc to core
+	  so adding other IRC-like protocols (but not IRC) would be easier.
+	  This was mostly done to make SILC plugin work.
+	* Perl was split to Irssi and Irssi::Irc packages. You'll currently
+	  need to use both of them with perl scripts ("use Irssi;
+	  use Irssi::Irc;). This might not be needed in future :)
+	* Changes:
+	   - /SET default_nick -> /SET nick
+	   - /FORMAT own_me -> /FORMAT own_action
+	   - /FORMAT own_dcc_me -> /FORMAT own_dcc_action
+
+	+ Small tutorial to new irssi users - docs/startup-HOWTO.txt
+	+ Proxy plugin works again, thanks to fuchs for fixing it :)
+	+ You can now connect multiple times to same server and
+	  reconnections will work correctly with them.
+	+ Support for half-ops (+h)
+	+ Actions will now show up in window activity with hilight or
+	  message-color, not the text-color as before.
+	+ Added tab-completion for /BIND's commands.
+	+ Perl support is now built as runtime loadable module by default.
+	  You can still build it statically with --enable-perl=static
+	  configure option.
+	+ /SET completion_nicks_lowercase - when completing nicks always
+	  write the nick with lowercase (uppercase letters are ugly ;)
+	+ /BIND <key> /command works now directly instead of needing the
+	  "command" id in the middle
+	+ /connect + /server server/chatnet completion by tommik.
+	+ Keyboard should never get stuck again when receiving huge amounts
+	  of text from server that irssi doesn't handle fast enough.
+	- Hopefully fixed the problem when Irssi starts eating 100% CPU
+	- Fixes to make irssi work with other (older and newer) perl
+	  versions than 5.005
+	- /MSG -servertag crashed irssi.
+	- /BAN could crash when showing bans
+	- log_day_change was never printed in logs
+	- /mode #channel -oooo... would deop the first 3, and then op the
+	  rest.
+	- When pressing down key, the command line wasn't saved to history.
+	- Closing or moving window didn't update the window activity list.
+	- Autologging with same named channels in different networks works
+	  now correctly.
+
+v0.7.95 2000-08-13  Timo Sirainen <tss@iki.fi>
+
+	* Changes:
+	    - /LOG: Removed the -rotate option, it was pretty useless since
+	      adding the % formats to file name already tells that the log
+	      should be rotated.
+	    - WJOIN -> /JOIN -window and WQUERY -> /QUERY -window. Added
+	      WJOIN and WQUERY aliases for them in default config..
+	+ /SAVEWINDOWS saves the current layout of windows. It's
+	  automatically reloaded at startup.
+	+ Theme fixes: /RELOAD reloads them, /SET theme changes the default
+	  theme, you can have window specific themes with /WINDOW THEME.
+	+ Irssi uses now real curses windows, irssi should work now better
+	  with non-ncurseses.
+	+ Autologging supports log rotating now too, just add the wanted %
+	  formats to /SET autolog_path
+	+ /MSG nick completion now gives the nicks in right time order when
+	  using multiple irc networks.
+	+ /SET beep_on_msg now works with all message levels, including
+	  HILIGHT.
+	+ You can change the default line indentation with /SET indent
+	+ /channel add -bots: You can now use @ or + before the nick mask to
+	  indicate that bot should have either ops or voices/ops.
+	+ Perl scripting:
+	    - Added namespaces, you don't have to worry about if someone
+	      else also happens to be using event_privmsg function..
+	    - You can unload scripts with /UNLOAD <name>.
+	    - Running scripts that are already loaded, destroys the old
+	      script from memory.
+	    - Added Irssi::print_window() function to print text to current
+	      window.
+	- Don't autoclose window after part/unquery if there was still some
+	  channels/queries left in window.
+	- Autologging fixes: Don't log WHOIS replies by default
+	  (autolog_level = all -crap). And with /msg nick1,nick2 don't log
+	  to file nick1,nick2.log but nick1.log and nick2.log separately.
+	  It also failed if you hadn't created the base path for the logs,
+	  now irssi creates the whole directory path.
+
+v0.7.94 2000-07-24  Timo Sirainen <tss@iki.fi>
+
+	* Help files! Use /HELP <command> to see them.
+	  They're just very first beta versions so don't expect too much.
+	  They were written by Markus Vuori <mm@vuori.net> with some help
+	  from EPIC's help files :)
+
+	* Changes:
+	   - /SET completion_disable_auto -> completion_auto
+	   - Changed the names of /BIND commands to be epic-compatible.
+	     Also added several new commands.
+	   - If --prefix is used, add the default perl library directory to
+	     same prefix.
+	+ Implemented /WINDOW LAST for changing to last current window.
+	+ Added DCCMSGS message level. Actions match now either MSGS or
+	  PUBLIC level as well as the ACTIONS level always.
+	+ SET print_active_channel - if you have multiple channels in same
+	  window, should we always print the channel for each message
+	  (<nick:#channel>) or only when the channel isn't active.
+	+ Don't print nick changes and quit messages from same nick more
+	  than once in the same window (if you had joined multiple channels
+	  in same window).
+	+ /SET settings_autosave - If set ON, settings are automatically
+	  saved when quitting and once per hour.
+	+ Don't allow recursive aliases, ie. /alias echo echo hello does
+	  print hello instead of going to infinite loop.
+	+ Implemented /IGNORE -time <seconds>, patch by fuchs.
+	+ /PERLFLUSH now cleans up the Perl interpreter properly (closes
+	  all the files opened in perl scripts, etc)
+	- Awaylog didn't work right if you did /AWAY multiple times.
+	- /NOTIFY -idle sometimes printed the unidle-message even if the
+	  nick really didn't stop idling. Fixed several other notify list
+	  bugs.
+	- Tab-msgcompletion didn't work right after you had used
+	  /msg -ircnet nick
+	- Fixed the long standing text buffer bug which could sometimes
+	  crash irssi if you were unlucky.
+	- The channel key given in /JOIN should override the one given
+	  in setup.
+	- /RELOAD caused several bugs
+
+v0.7.93 2000-07-09  Timo Sirainen <tss@iki.fi>
+
+	+ Implemented /BIND [<key> [<action> [<data>]]] command.
+	  <key> can be CTRL-x, ALT-X or ALT-SHIFT-X
+	  The most useful action is "command", give the command in <data>.
+	  You can see the rest of the actions with typing /BIND without
+	  any parameters. Some actions might have more than one word,
+	  to use them type the action in "quotation marks".
+	+ When netsplit is over, irssi prints "Netsplit over, joins: (nicks)"
+	  and hides all the real JOIN messages.
+	+ /^COMMAND hides the output of the command, it's not written to
+	  log either. Good for sending passwords for example.
+	+ If you're pasting text to channel and some of it starts with /,
+	  Irssi will send the "/command" to channel if it doesn't exist
+	  (instead of just printing "unknown command").
+	+ --enable-perl[=libdir] to configure - you can specify what
+	  directory to install the perl libraries.
+	+ Implemented runtime loadable modules. /LOAD loads a module,
+	  /UNLOAD unloads it.
+	+ You can change statusbar colors with /SET statusbar_xxx.
+	+ Added -clear option to /SET.
+	+ Tab-completion for /FORMAT.
+	+ Ctrl-Y undeletes the last line deleted with Ctrl-U.
+	- Reconnecting to server had a few bugs
+	- /RELOADing configuration produced a few bugs
+	- Highlighting had several bugs
+	- Automatic command and option completions had some bugs
+	- -option tab-completion didn't work
+
+v0.7.92 2000-06-30  Timo Sirainen <tss@iki.fi>
+
+	* Some changes:
+	    /REHASH -> /RELOAD
+	    /SERVER -add, -remove, -list -> /SERVER ADD, REMOVE, LIST
+	    /SET window_close_on_part -> /SET autoclose_windows
+	    /HILIGHT -nick -> /HILIGHT -mask (see below)
+	+ Automatic completion of /commands. Automatic completion of
+	  command -options. Complains about unknown -options.
+	+ /MSG [-<server tag>] <nick> <msg> - you can specify what server
+	  to send the message to.
+	+ Rewrote tab-completion to be modular, it's REALLY easy to add
+	  completion to whatever you want. It now handles:
+	    - Command completion works better, subcommand completion works
+	    - Command -option completion
+	    - /MSG completion completes from all IRC servers, so if you had
+	      message from ircnet and efnet, irssi will complete with
+	      /MSG -ircnet nick1 -> /MSG -efnet nick2
+	    - #channel completion works - it completes only channels you
+	      have joined or have in setup
+	    - File name completion with /DCC SEND (and other commands)
+	    - /TOGGLE settings completion
+	    - Completion for command parameters or subcommands work right
+	      even if the command was typed as alias.
+	+ /HILIGHT updates:
+	     - -nick highlights only the nick, not the whole line. Works
+	       only with public messages.
+	     - -mask option matches the text for nick mask (it didn't even
+	       work before).
+	     - Window numbers in activity list are colored with hilight
+	       color.
+	     - You can give real color names with -color option. All the
+	       "normal" colors can be given, if you want bold colors, use
+	       b+color name, like bgreen.
+	     - /SET hilight_color specifies the default highlight color
+	     - /SET hilight_only_nick specifies if we should highlight the
+	       nick or the whole line if -nick or -nonick wasn't specified
+	       with /HILIGHT.
+	+ /LAST -away checks only lines that came after last time you
+	  went away.
+	+ You can specify command(s) to be sent automatically to server
+	  after connected with /IRCNET -autosendcmd. Useful for sending
+	  your password to NickServ.
+	+ Added /SET reuse_unused_windows setting, default is OFF. Works
+	  only when /SET autoclose_windows is ON. This specifies if new
+	  windows should be joined to new window, or if existing empty
+	  windows should be used.
+	+ /SET lag_min_show -1 disables displaying lag entirely.
+	- /SCROLLBACK HOME, END and GOTO commands weren't working right.
+	- Closing active window that had channels/queries could crash
+	- Using \n with /SET expand_escapes ON didn't work right.
+	- Logging HILIGHT messages didn't work
+	- The "max. count" parameter in /LAST didn't work right.
+
+v0.7.91 2000-06-14  Timo Sirainen <tss@iki.fi>
+
+	+ Ctrl-X changes IRC server in stats/msgs/empty windows.
+	+ /JOIN -<server tag> #channel joins to channel in specified server.
+	+ /WHOIS automatically sends a /WHOWAS query if nick wasn't in IRC.
+	+ if some unknown /command had another / in it, like /usr/bin,
+	  send it as normal message. good for copypasting paths :)
+	+ If you're not allowed to connect to server (K-lined, no I-line),
+	  Irssi won't try to reconnect back to the server.
+	+ You can disable window activity notifies in specified channels
+	  with /SET noact_channels #chan1 #chan2 .. The activity is
+	  displayed if window had a message to you.
+	+ Tab-completion works now with /commands and /set variables
+	+ /SET close_window_on_part - should we close the window too when
+	  /PARTing channel
+	+ /SET autocreate_own_query ON - creates query window when you
+	  send message with /MSG nick.
+	+ /SET mail_counter specifies if we should show mail counter in
+	  statusbar.
+	+ /SET wall_format specifies the text that's sent with /WALL
+	+ If you /SET expand_escapes ON and type \n or \t to text line, they
+	  will be expanded to newline and tab.
+	+ Ctrl-W deletes word in left
+	- Flood was detected wrong - /SET flood_timecheck's argument was
+	  supposed to be seconds, not milliseconds.
+	- Unignoring autoignored nicks didn't work
+	- Logging wrote messages to log file twice
+	- /WINDOW MOVE <number> could put irssi to infinite loop
+	- ANSI blink code crashed irssi.
+	- Replying to DCC GET and CHAT requests didn't work
+	- /HILIGHT displayed levels twice, /HILIGHT -channels didn't work
+	- /SET ignore_signals wasn't read at startup..
+
+v0.7.90 2000-06-04  Timo Sirainen <tss@iki.fi>
+
+	* On the way to 0.8.0 .. Major rewriting/rearranging code. There's
+	  some changes in behaviour because I'm trying to make Irssi
+	  compatible with EPIC as much as possible (except the scripting,
+	  perl should be enough?)
+
+	* DOCUMENTATION! See docs/manual.txt
+
+	  This NEWS file contains only the biggest new features, you should
+	  browse through the documentation to find the rest. Some of the
+	  parameters of commands listed in this file aren't really up to
+	  date since I got a bit bored writing them here too.. They are
+	  correct in the manual.
+
+	* Irssi isn't anymore IRC specific client, you could easily take the
+	  whole IRC part away and use some other chat protocol instead, or
+	  use both at the same time. Currently however, only IRC protocol
+	  is supported. See docs/design.txt for more information.
+
+	* libPropList isn't needed anymore - I'm using my own configuration
+	  library. This is mostly because different proplists worked a bit
+	  differently everywhere and several people had problems with it.
+	  It's also yet another extra library that you needed to compile
+	  Irssi. New configuration library has several advantages:
+
+	  You can add comments to configuration file and they also stay
+	  there when it's saved.
+
+	  It's not nearly as vulnerable as proplist. If some error occurs,
+	  instead of just not reading anything it will try to continue if
+	  possible. Also the error messages are written to irssi's text
+	  window instead of stdout.
+
+	  It can be managed more easily than proplist - setting/getting the
+	  configuration is a lot more easier.
+
+	* Coding style changes - I'm not using gint, gchar etc. anymore,
+	  they're just extra pain when moving code to non-glib projects and
+	  syntax hilighting doesn't work by default with most editors ;)
+
+	  Indentation style was also changed to K&R because of some political
+	  reasons ;) And I'm already starting to like it.. :) It forces me
+	  to split code to different functions more often and the result is
+	  that the code gets more readable.
+
+	  And finally I'm also using `const' all over the place.
+
+	* Signal handlers changed - you don't anymore return value 0 if you
+	  wish to stop signal. Instead use signal_stop() or
+	  signal_stop_by_name().
+
+	+ Flood protection when sending commands to server works now better.
+	  It allows sending first 5 messages immediately, but after that
+	  only one message is sent every 2.2 seconds.
+
+	  This is the same flood protection that most IRC servers use, so
+	  the only affect this protection has is that when sending a lot of
+	  commands to server you won't get kicked out from server because of
+	  "excessive flood".
+
+	  This can be changed from settings `cmd_max_at_once' and
+	  `cmd_queue_speed'. If you want to disable this for some reason, use
+	  /SET cmd_queue_speed 0
+	+ Split windows in text version, all the normal ircII /WINDOW
+	  commands should work: new, kill, grow, shrink, balance, show, hide
+	+ /EVAL <commands> - Expand all the special variables from string and
+	  run it. Commands can be split with ; character. See
+	  docs/special_vars.txt for more info.
+	+ Aliases are parsed just like /EVAL - arguments are in $0..$9.
+	+ Text formats are also parsed like /EVAL, arguments used to be in
+	  $1..$9, now they're in $0..$8 so it messes up existing themes..
+	+ /SET [key [value]] - no more the '=' character. Boolean values
+	  also need to be changed with ON/OFF/TOGGLE values (not yes/no).
+	+ /SAVE [<filename>] - saves the settings to file.
+	  /REHASH [<filename>] - re-read the configuration file on the fly
+	+ /TOGGLE <key> [ON/OFF] - same as /SET <key> TOGGLE
+	+ /ALIAS [-]<alias> [<command>], /UNALIAS <alias>
+	  Show, add or remove aliases. /ALIAS -alias = /UNALIAS alias
+	+ /NOTIFY [-list] [-away] [-idle [minutes]] <mask> [ircnet [ircnet...]]
+	    -away notifies about away-status changes
+	    -idle notifies if idle time is first larger than `minutes'
+	     (default is hour) and then it drops down.
+            -list lists the notify list entries with all their settings
+	  /UNNOTIFY <mask>
+
+	  /NOTIFY without any arguments displays if the people in notify
+	  list are online or offline.
+	+ /HILIGHT [-nick | -regexp | -word] [-color <color>]
+	           [-level <level>] [-channels <channels>] <text>
+	    -nick: match only for nick
+	    -regexp: `text' is a regular expression
+	    -word: `text' must match to full words
+	    -color: print the reply with `color' - color can be a bold (^B),
+	            underline (^_) etc. too
+	    -level: match only for `level' messages, default is
+	            publics,msgs,notices,actions
+	    -channels: match only in `channels'
+	  /DEHILIGHT <ref#> | <text>
+	+ /LASTLOG [-] [-new] [-regexp | -word] [-<level> [...]]
+	           [<pattern>] [<count> [<start>]]
+	    -: don't print the "Lastlog:" and "End of Lastlog" messages.
+	    -new: show only lines since last /LASTLOG
+	    -regexp: `text' is a regular expression
+	    -word: `text' must match to full words
+	    -level: what levels to check, like -public -msgs (default is all)
+	    <pattern>: text to search for, or all if empty
+	    <count>: maximum number of lines to show
+	    <start>: skip the last `start' lines
+	+ /IGNORE [-regexp | -word] [-pattern <pattern>] [-except]
+	          [-channels <channel>] <mask> <levels> <^levels>
+	    -regexp: `pattern' is a regular expression
+	    -word: `pattern' must match to full words
+	    -pattern: <pattern> must match to the message's text
+	    -except: *DON'T* ignore
+	    -channels: ignore only in channels
+	    <mask>: either a nick mask or list of channels
+	    <levels>: list of levels to ignore
+	    <^levels>: list of levels to NOT ignore
+	               (/ignore -except nick notices = /ignore nick ^notices)
+	  /UNIGNORE <ref#> | <mask>
+
+	  The best match always wins, so you can have:
+	    /IGNORE * CTCPS
+	    /IGNORE -except *!*@host.org CTCPS
+	+ /LOG OPEN [-noopen] [-autoopen] [-targets <targets>] [-window]
+	            [-rotate hour|day|month] <filename> [<levels>]
+	    -noopen: create the entry to log list, but don't start logging
+	    -autoopen: automatically open this log file at startup
+	    -targets: log only in specified channels/nicks
+	    -window: Log this window
+	    -rotate: Reopen the log file every hour, day or month. This
+	             makes only sense if you specify date/time formats
+		     to file name.
+	    <filename>: File name where to log, it is parsed with strftime(),
+	                so %d=day, etc. see "man strftime" for more info.
+	    <levels>: Defaults to ALL
+          /LOG CLOSE <ref#> | <fname> - close log and remove from log list
+	  /LOG START <ref#> | <fname> - start logging to file
+	  /LOG STOP <ref#> | <fname> - stop logging to file
+	  /LOG - display the log list
+	  NOTE: Log files are locked after opened, so two irssi's can't
+	  accidentally try to write to same log file.
+	+ /WINDOW LOG ON|OFF|TOGGLE [<filename>]
+	  Start/stop logging window, same as /LOG OPEN -window. If file name
+	  isn't given, it defaults to ~/irc.log.<windowname> or
+	  ~/irc.log.Window<ref#> if window doesn't have name.
+	  /WINDOW LOGFILE <filename>
+	  Creates the entry to log list, same as /LOG OPEN -window -noopen.
+	  Also, if /WINDOW LOG ON is used it starts logging to this file.
+	+ /SET AUTOLOG ON|OFF|TOGGLE
+	  /SET AUTOLOG_LEVEL <level>
+	  /SET AUTOLOG_PATH <path> - expandos can be used, $0 is the target.
+	  Enables automatic logging, files are automatically created as
+	  needed and after some time of inactivity, they are closed. If you
+	  are using multiple servers, it makes sense to use the server tag
+	  as part of the file name, for example ~/irclogs/$tag/$0.log (this
+	  is the default).
+	+ /SET window_auto_change - if enabled, irssi will automatically
+	  change to automatically created windows (like queries). It will
+	  also clear your command line and put it to command history so that
+	  you don't accidentally write anything to wrong window. You'll get
+	  the command back by pressing up arrow.
+	+ /SET show_quit_once - show quit message only once instead of in
+	  all channel windows the nick was joined.
+	+ Server reconnections work better. It will now automatically set
+	  your previous user mode and away message (and rejoin the channels,
+	  which it already did before) after reconnected. If you use /SERVER
+	  to connect to different IRC network, none of this will be done.
+	+ /CAT <filename> - prints the file to screen
+	+ /SET query_auto_close <secs> - automatically close queries after
+	  <secs> seconds. It won't close queries that have unread messages,
+	  and it won't close queries in the active window.
+
+v0.7.28 2000-03-11  Timo Sirainen <tss@iki.fi>
+
+	+ irssi-text: New improved "text widget". It takes less memory and
+	  if you resize the terminal horizonally, the text automatically
+	  changes to right size. Several other changes too:
+
+	  /CLEAR only clears the screen, you can still scroll the window up.
+	  /SCROLLBACK, or the default alias /SB:
+            /SB CLEAR - Clear screen, free all memory used by texts in window.
+            /SB HOME - Jump to start of the buffer
+            /SB END - Jump to end of the buffer
+            /SB GOTO [[-|+]line#|time] - Jump to specified line or timestamp.
+
+	    -100 jumps back 100 lines, +100 jumps forward 100 lines, or
+	    100 simply jumps to 100. line in scrollback.
+
+	    Time is the format [dd.mm | -<days ago>] hh:mi[:ss]
+
+	    Examples:
+	      /SB GOTO 15:00 - Jump to first text that came after 15:00 today
+	      /SB GOTO -1 15:00 - First text after 15:00 yesterday
+	      /SB GOTO 1.2 - First text in 1. February
+	      /SB GOTO -100 - Jump back 100 lines
+	      /SB GOTO +100 - Jump for
+
+	+ After lost connection to server and reconnected or changed the
+	  server manually with /SERVER, Irssi will rejoin back to the same
+	  channels that you were in before disconnection. They will also be
+	  placed to same windows they were, even if you were in same channel
+	  in multiple servers.
+	+ /SERVERS and disconnect dialog displays also servers that are
+	  being currently connected and waiting reconnections. You can remove
+	  them with /DISCONNECT <tag>.
+	+ If you are in multiple irc servers and the active server of the
+	  window isn't the same as where the message came from, the message
+	  is prefixed with a [server tag].
+	+ If you don't specify the path for Perl scripts, Irssi tries to
+	  find them from ~/.irssi/scripts/ or /usr/lib/irssi/scripts/
+	  directories. Irssi will also run automatically scripts in
+	  ~/.irssi/scripts/autorun/ at startup. Several other updates to
+	  Perl support too.
+	+ Support for ircII translation tables, /set translation <file>
+	  See /usr/share/ircII/translation/* (at least in Debian)
+	+ /ACTION <target> <text> - Send action to target (like /ME), target
+	  is either #channel, nick or =dcc_char_nick
+	+ 5 CTRL-C's in a row quits irssi-text.
+	+ %| in themes marks the line indentation position - works only in
+	  irssi-text for now..
+	+ You can have several msgs/status windows, one for each server.
+	+ Option: start GNOME panel applet at startup
+	+ --without-gtk option for configure disables building GTK frontend
+	+ /LAST -new shows only the texts that came after latest /LAST.
+	- Autojoining doesn't switch automatically to the joined channel's
+	  window (try #2 :)
+	- Several (Perl) compilation problems fixed.
+	- Text hilight color was dark grey, changed to white..
+	- /LAST doesn't display the texts found from previous /LAST blocks
+	- Fixed a few memory leaks
+
+v0.7.27 2000-02-25  Timo Sirainen <tss@iki.fi>
+
+	* Perl support - finally! Took only a year or so to imlement it ;)
+	  Well, I could have done it ages ago but it wouldn't have had
+	  all the flexibility it now has - you should be able to do almost
+	  anything with perl scripts. See DOCS/PERL for some documentation
+	  and examples/ directory for a couple of example scripts.
+
+	  This is the very first version and I haven't even tested that all
+	  functions work correctly! Any suggestions are welcome. I don't
+	  really like the values() functions so if someone knows better ways
+	  to do them I'd really like to hear.
+
+	  BTW. I haven't had time to learn Perl well yet, so my scripts are
+	  probably not the best examples.. :)
+
+	  If for some reason you don't wish to use Perl, you can disble it
+	  with giving --disable-perl to configure.
+
+	+ /CYCLE [#channel] - parts/rejoins the channel
+	+ Autojoining doesn't switch automatically to the joined channel's
+	  window.
+	+ Server tag generation is a bit smarter now.
+	+ irssi-text: Resizing terminal works now right even if your curses
+	  don't have resizeterm() function.
+	- /NAMES crashed when done in a non-channel window
+	- irssi-text: Resizing terminal when irssi had some empty windows
+	  messed them up..
+	- toggle_show_nickmode didn't actually do anything :) It was
+	  always on..
+
+v0.7.26 2000-02-19  Timo Sirainen <tss@iki.fi>
+
+	- Space (and maybe other keys) didn't work when caps/numlock was on.
+
+v0.7.25 2000-02-19  Timo Sirainen <tss@iki.fi>
+
+	+ /WQUERY - create query to current window
+	+ Irssi doesn't close the window anymore when using /PART
+	+ irssi-text also displays user's address in topic bar in queries.
+	+ /NAMES list is now displayed sorted
+	+ irssi-text: /WINDOW MOVE PREV|NEXT
+	- Topic bar sometimes displayed some other channel's topic if the
+	  channel didn't have a topic.
+	- Irssi automatically changed to auto-created query windows..
+	- When using /WINDOW CLOSE it didn't change to different window
+	- Made fontset_load() optional - it broke some fonts..
+	- Using Ctrl-B (bold) didn't move the cursor
+
+v0.7.24 2000-02-19  Timo Sirainen <tss@iki.fi> [stable]
+
+	+ French translation
+	+ Updated Brazilian Portuguese translation translation, now with
+	  the right pot file name :)
+	+ Using fontset_load() instead of font_load(), helps with using
+	  some fonts (by hashao@telebot.com)
+	+ /TS - display topics of all channels you're joined
+	+ Automatically change to the created window
+	+ Option: Show op/voice status in channel messages before nick.
+	+ irssi-text: Displays topic bar op the top of the screen -
+	  /set toggle_show_topicbar = yes|no
+	+ Recognize +a (anonymous) and +r (reop when opless) modes
+	+ Don't allow any setup file changes or log writing if another irssi
+	  session is running.
+	+ /whois without any arguments gives a whois of yourself
+	- Irc network list was still corrupted in channel dialog.
+	- /LIST dialog - users column is now sorted numerically
+	  (10 shows after 9, not after 1)..
+	- Log setup dialog: Clear all button was over Client errors
+	  toggle button.
+	- /LAST's output displayed some crap in log file.
+	- irssi-text should work better with other curses libraries than
+	  ncurses
+	- irssi-text should work better with non-black backgounds
+	- Fixed tab completion when completion char was comma
+	- Couple of configure bugs fixed
+	- Specifying source host (vhosts) didn't work.
+	- DCC resume had been broken quite a while
+
+v0.7.23 2000-01-23  Timo Sirainen <cras@irccrew.org> [stable]
+
+	+ channel's key (+k key) is displayed in irssi-text's statusbar if it
+	  has one.
+	+ Nick hilight detector is a bit smarter now, for example if your
+	  nick happens to be "its", "it's blahblah" doesn't trigger it..
+	+ colorless irssi-text (/set colors = no): activity list is split in
+	  two, Act and Det lists. Det displays list of windows where there's
+	  new messages for you.
+	- /LAST without any parameters crashed
+	- if queried nick was changed, GUI didn't notice it.
+	- config file was invalid in .22
+	- irssi text widget didn't work in .22
+	- dcc transfers always displayed 0.00kB/s in .22
+
+v0.7.22 2000-01-16  Timo Sirainen <cras@irccrew.org> [stable]
+
+	+ configure displays a summary of things to compile
+	+ /set colors = yes|no, sets colors on/off in irssi-text
+	+ /window goto active now finds first the window with the higest
+	  activity (msgs to you -> msgs -> rest). Alt-A is also default key
+	  shortcut for this
+	+ When connection is lost to server, irssi will remember the channels
+	  in windows. After reconnected, (auto)joining to same channels will
+	  join the channels to the old windows.
+	+ Improved hilighting: You can specify what color to hilight the text
+	  with, to channel field type the (mirc) color number, like
+	  "4 #blah" hilights the text with red in channel #blah, both color
+	  and channel(s) are optional. You can also hilight nicks' colors, to
+	  text field type "NICK:nick!mask", like NICK:nick, or
+	  NICK:*!*@*.blah.fi hilights people from blah.fi domain
+	- Modeless channels (+channel) didn't get synced ever..
+	- Some kB/s messages displayed wrong values when resuming DCC
+	  transfers. Also, kB/s is now displayed with two decimals
+	- "Day changed to 00-10-2000" .. month was wrong. No Y2K bugs
+	  however ;)
+	- List of ircnets was displyed wrong in server dialog.
+	- Userhost replies didn't handle ircops right..
+	- Doesn't quit when receives SIGHUP - some window managers send it
+	  when restarting itself (Afterstep)
+	- Specifying "source host IP" didn't work (vhosts).
+	- Using ctrl-b etc. didn't move the cursor forward..
+	- Don't try to compile GTK parts of plugins if we don't even want
+	  build GTK irssi
+	- Doesn't crash when trying to create DCC dialog after being
+	  disconnected from IRC server
+	- Modeless channels (+channel) didn't get synced ever..
+	- Some transparency fixes, it's a lot faster now when moving the
+	  window, but it's still too slow when creating it, not sure why..
+
+v0.7.21 1999-12-20  Timo Sirainen <cras@irccrew.org> [unstable]
+
+	+ Irssi-text: Channel activities are displayed with different colors
+	  in statusbar
+	+ Keeps track of "wanted nick", ie. the nick you specified in the
+	  setup or to /server or /nick. When reconnecting to server it always
+	  tries the wanted nick before falling back to alternate nicks.
+	+ IRC Network specific settings: nick, username, realname,
+	  max. kicks/modes/msgs per command.
+	+ Transparency works
+	+ Automatic logging when you're away. Set it on/off from settings/misc
+	+ /connect and /server changes the server in the current window if
+	  the window isn't channel or query.
+	+ Wallop actions are displayed right
+	+ Ctrl-N/P keys change to previous/next window
+	+ Polish translation updated
+	+ /channel next, /channel prev - changes to next/previous channel in
+	  the current window. Ctrl-X is by default bound to /channel next.
+	- /WHO could crash irssi
+	- /join !!channel crashed
+
+v0.7.20.1 1999-11-28  Timo Sirainen <cras@irccrew.org> [unstable]
+
+	* I just started #irssi in irc.openprojects.net too.. It's still in
+	  IRCNet too, don't know yet if I'll keep both or drop the other one..
+
+	+ You can use %n as current nick with aliases
+	- Closing a window with split windows open crashed
+	- Channel widgets weren't being updated when joined to channel in
+	  empty window
+	- configure didn't check if we wanted to build MySQL plugin or not,
+	  now it's built only if you give --with-mysql to configure
+	- Using the whois, ping, etc. buttons in queries crashed
+
+v0.7.20 1999-11-27  Timo Sirainen <cras@irccrew.org> [unstable]
+
+	+ Polish and finnish translations started
+
+	+ SQL plugin which doesn't do much, currently supports MySQL only.
+	  Meant to be used by other plugins.
+
+	+ Botnet to bot plugin - it should already be possible to create a
+	  big bot network with this (each bot having multiple clients +
+	  uplink). The functionality is limited only to BCAST message for
+	  now which sends a message to all bots. Read docs/botnet.txt for my
+	  plans for it :)
+
+	- If plugins failed in initialization (plugin_init()), irssi could
+	  crash.
+	- Server settings (nick, realname, etc.) were saved to different
+	  place in configuration file than where they were read from..
+	  So, saving them didn't really work.
+	- Plugin autoloading didn't work
+	- When trying to show channel's window from panel and you weren't
+	  using helvetica font (itext's internal default), irssi crashed..
+	- Irssi crashed if you didn't have menubar enabled and didn't
+	  compile with gnome.
+	- When invalid theme was found from global directory, irssi
+	  complained about it every time. Now the fixed theme is saved to
+	  ~/.irssi/ directory and used thereafter.
+	- Deleting ircnets didn't work right
+
+v0.7.19 1999-11-20  Timo Sirainen <cras@irccrew.org> [unstable]
+
+	* Text formats changed - they should be compatible with epic/bx now.
+          See docs/FORMATS for more information
+
+	+ Internationalization support - finally. No languages yet though..
+
+	+ /window new split creates a new splitted window
+	+ Automatic text replaces, useful for things like :9 -> :) .. This
+	  is actually almost same as completions, except they are activated
+	  with different keys..
+	+ Nicklist popup menu is configurable
+	+ ~/.irssi/startup - add all commands here you want to run at startup
+	+ Much more levels for ignoring/logging/etc. See docs/COMMANDS for a
+	  list
+	+ Ignoring joins, parts, etc. work, ignoring channels work
+	+ Automatically loading plugins at startup works in irssi-text and
+	  irssibot too
+	+ Autoaccept dcc get/chat from given nick/address
+	+ /help
+	+ Server/Links dialog, displays list of servers in tree view.
+	  Doubleclicking a hub asks the servers behind the hub (doesn't seem
+	  to work in efnet)
+	+ /server +irc.server.net does the same as /connect irc.server.net
+	+ Nicklist is resizeable
+	+ Buttons for closing and moving window left/right
+	+ Query windows display nick's address in topic widget and the
+	  address isn't displayed in every msg in query windows.
+	+ It's possible to add bold/colors/etc to default quit message
+	+ MIRC colors are finally displayed with right colors
+	+ You can run multiple command in alias, separate them with &&.
+	  You can create a & character with \&
+	+ Hilighting changes: Your own /msgs won't trigger channel activity,
+	  received private messages get the "new text" color
+	+ /MODE accepts multiple modes at once and they're split automatically
+	  to 3 modes/command, like /MODE #chan +oooooo nick1,nick2,.. is
+	  split to two commands which are sent to server.
+	+ /KICK, /MSG, /NOTICE, /CTCP and /NCTCP are also automatically split
+	  into multiple real commands. /KICK can kick max. 4 nicks per
+	  command, privmsg/notice can send max. 3 nicks per command.
+	+ Option: Show timestamps in msgs.
+	- Joining to channel from channels dialog that had password set
+	  didn't work.
+	- When scrolling, Irssi text widget sometimes left black spots in
+	  text area if some other window was overlaping it.
+	- DCC resumes still didn't work
+	- Fixed some memory leaks
+
+v0.7.18.1 1999-11-04  Timo Sirainen <cras@irccrew.org> [stable]
+
+	- Window didn't scroll if you were using GtkText
+	- Resuming DCC transfers could mess up the existing transfers with
+	  the same nick..
+	- Some PONGs were displayed on screen if you were enough lagged..
+	- --help works now without gnome (gtk/text versions)
+	- Sending data to irc server/dcc chats/proxy's clients/etc. won't
+	  block forever anymore - I once got it to happen with proxy..
+	- Some fixes for channel limit/key widgets above nicklist
+	- Speech plugin works now right with timestamps enabled
+	- irssibot (gui-none) doesn't crash at startup anymore and it doesn't
+	  link with ui-common anymore. Also added a --load / -l command line
+	  option to specify what plugin to load at startup. Default = bot
+
+v0.7.18 1999-10-18  Timo Sirainen <cras@irccrew.org> [stable]
+
+	* Finally a version I dare to call stable :) Just a bugfix release
+	  for 0.7.17 but it had only a few problems..
+
+	* Status window is now off by default
+
+	- Sound and speech plugins weren't working.
+	- Proxy plugin shouldn't crash now while not connected to server
+	- Using some menuitems crashed when using the popup menus instead of
+	  menubar.
+	- Removed a Gdk-Critical warning when opening themes dialog without
+	  GNOME
+	- When resuming DCC transfers the average transfer rate was incorrect
+	- If you tried to connect to server while themes dialog was open,
+	  it crashed.
+	- Several problems fixed with changing background pixmaps
+	- Fixes for building from different directory
+	- Trying to save theme crashed..
+
+v0.7.17 1999-10-16  Timo Sirainen <cras@irccrew.org> [unstable]
+
+	+ Irssi text widget! (replaces zvt)
+	   - supports proportional fonts
+           - FAST
+           - background pixmaps (scaled, tiled, scrollable, shaded)
+
+	+ Proxy plugin - Unlike other irc proxies, this is more than just a
+	  simple proxy. You can connect to it from multiple clients at the
+	  same time, but each client will use the _same_ irc session, so you
+	  can keep one irc client open all the time in your home, one at
+	  work, one at wc, etc. All the clients get the same "normal"
+	  messages from server, but if you request a /whois or /who or some
+	  other commands, the reply will be sent to only the client that
+	  requested it. Check README how to use it.
+
+	+ Irssi is now much faster catching up things after joined to
+	  channel, it asks channels' MODE and WHO first, all with the same
+	  command (WHO #a,#b,#c), after them it asks the ban lists etc. less
+	  important things.
+	+ Workaround for GTK themes eating X server's memory
+	+ Command line arguments:
+		-c server [-p port] : connects to server at startup
+		-! : don't autoconnect to any servers
+		-n : specify nick to use (override setup)
+	+ Server lag displayed in statusbar, you can also set irssi to
+	  automatically disconnect from server if it is too lagged
+	+ Channel limit and key is displayed above nicklist
+	+ Number of ops and total number of nicks in channel is displayed
+	+ Nicklist background color can be changed
+	+ Each window can have it's own command history buffer
+	+ Try to let the server disconnect the socket (5 sec timeout) to make
+	  sure that quit message gets through.
+	+ Improved /gwhois dialog
+	+ Setup dialogs are resizeable
+	+ You can specify what port to use with DCC.
+	- Channel dialog fixes: after editing channel, it was moved to the
+	  end of the list, opening multiple channels edit dialogs didn't
+	  work right
+        - Reconnecting to server didn't work (always)
+	- Giving multiple nicks for /gwhois messed up irssi
+
 v0.7.16 1999-09-13  Timo Sirainen <cras@irccrew.org> [unstable]
 
 	+ Started bot plugin, it has simple user management functions and
@@ -124,7 +1684,7 @@ v0.7.14 1999-08-22  Timo Sirainen <cras@irccrew.org> [unstable]
 
 	* Irssi uses now libPropList to read and save configuration file, so
 	  you need to have libPropList installed, it's also in different
-	  format so your old config file doesn't work anymore. 
+	  format so your old config file doesn't work anymore.
 
 	  Configuration file is located now in ~/.irssi/config file.
 	  Themes are also now stored in separate files in ~/.irssi/*.theme
@@ -848,7 +2408,7 @@ v0.3.5 1999-01-26  Timo Sirainen <a@sicom.fi>
           with _HEAVY_ network load (ie. if there's buffer overflows or some
           other weird bugs). It doesn't :)
         + Preferences: Maximum number of channels to display in panel
-        - When leaving from channels, panel didn't redraw it's list correctly        
+        - When leaving from channels, panel didn't redraw it's list correctly
 	- Leaving channels in tabbed window mode crashed
 	- Fixed crash if connection got lost
 

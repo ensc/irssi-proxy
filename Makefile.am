@@ -1,50 +1,35 @@
+ACLOCAL_AMFLAGS = -I .
+
 # create default-config.h
-config.h: default-config.h
+BUILT_SOURCES = default-config.h default-theme.h
 
-default-config.h: $(srcdir)/config
-	$(srcdir)/file2header.sh $(srcdir)/config > default-config.h
+default-config.h: $(srcdir)/irssi.conf
+	$(srcdir)/file2header.sh $(srcdir)/irssi.conf default_config > default-config.h
+default-theme.h: $(srcdir)/default.theme
+	$(srcdir)/file2header.sh $(srcdir)/default.theme default_theme > default-theme.h
 
-## if <internationalization support>
-#SUBDIRS = po intl macros support # <your subdirs here>
-## else
-if BUILD_PLUGINS
-PLUGINS=plugins
-endif
-if BUILD_SERVERTEST
-SERVERTEST=servertest
-endif
+SUBDIRS = src docs scripts
 
-SUBDIRS = macros src $(PLUGINS) $(SERVERTEST)
-## endif
+confdir = $(sysconfdir)
+conf_DATA = irssi.conf
 
-## to automatically rebuild aclocal.m4 if any of the macros in
-## `macros/' change
-@MAINT@include macros/macros.dep
-@MAINT@macros/macros.dep: macros/Makefile.am
-@MAINT@	cd macros && $(MAKE) macros.dep
+themedir = $(datadir)/irssi/themes
+theme_DATA = default.theme colorless.theme
 
-if HAVE_GNOME
-appletdir = $(datadir)/applets/Network
-applet_DATA = irssi.desktop
+pkginclude_HEADERS = irssi-config.h irssi-version.h
 
-corbadir = $(sysconfdir)/CORBA/servers
-corba_DATA = irssi.gnorba
-endif
+noinst_HEADERS = irssi-version.h.in
 
-confdir = $(sysconfdir)/irssi
-conf_DATA = config colorless.theme
-
-EXTRA_DIST = window-views-patch.diff \
+EXTRA_DIST = \
+	ChangeLog \
 	autogen.sh \
-	README-HEBREW \
-	COMMANDS \
+	curses.m4 \
+	README \
+	README.cygwin \
 	file2header.sh \
-	irssi.spec \
 	$(conf_DATA) \
-	irssi.gnorba \
-	irssi.desktop
-
-## make rpms
-rpm: Makefile
-	$(MAKE) dist
-	rpm -ta --clean $(PACKAGE)-$(VERSION).tar.gz
+	$(theme_DATA) \
+	irssi-config.in \
+	irssi-icon.png \
+	syntax.pl \
+	findsyntax.pl

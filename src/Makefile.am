@@ -1,17 +1,17 @@
-if HAS_CURSES
-TEXTUI=gui-text
+if BUILD_TEXTUI
+TEXTUI=fe-text
 endif
 
-if BUILD_GNOMEUI
-GNOMEUI=gui-gnome
+if BUILD_IRSSIBOT
+BOTUI=fe-none
 endif
 
-noinst_HEADERS = \
-	common.h \
-	common-setup.h \
-	irssi-plugin.h \
-	irssi-plugin-gui.h
+if HAVE_PERL
+PERLDIR=perl
+endif
 
-SUBDIRS = irc-base irc-extra ui-common lib-config lib-nongui settings $(GNOMEUI) $(TEXTUI) gui-none
+pkginc_srcdir=$(pkgincludedir)/src
+pkginc_src_HEADERS = \
+	common.h
 
-EXTRA_DIST = signal.doc
+SUBDIRS = lib-config core irc fe-common $(PERLDIR) $(TEXTUI) $(BOTUI)

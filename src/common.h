@@ -1,18 +1,27 @@
 #ifndef __COMMON_H
 #define __COMMON_H
 
-#define IRSSI_AUTHOR "Timo Sirainen <cras@irccrew.org>"
-#define IRSSI_WEBSITE "http://xlife.dhs.org/irssi/"
+#define IRSSI_WEBSITE "http://irssi.org/"
+#define IRSSI_AUTHOR_EMAIL "cras@irssi.org"
+#define IRSSI_AUTHOR "Timo Sirainen <"IRSSI_AUTHOR_EMAIL">"
+
+#define IRSSI_DIR_FULL "%s/.irssi" /* %s == g_get_home_dir() */
+
+#define IRSSI_GLOBAL_CONFIG "irssi.conf" /* config file name in /etc/ */
+#define IRSSI_HOME_CONFIG "config" /* config file name in ~/.irssi/ */
+
+#define DEFAULT_SERVER_ADD_PORT 6667
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "irssi-config.h"
 #endif
 
 #include <stdio.h>
+#include <stddef.h>
 #include <stdarg.h>
 #include <ctype.h>
-#  ifdef HAVE_STRING_H
-#include <string.h>
+#ifdef HAVE_STRING_H
+#  include <string.h>
 #endif
 #ifdef HAVE_STDLIB_H
 #  include <stdlib.h>
@@ -21,10 +30,10 @@
 #include <time.h>
 
 #include <sys/types.h>
-#include <sys/time.h>
+#ifdef HAVE_SYS_TIME_H
+#  include <sys/time.h>
+#endif
 #include <sys/stat.h>
-#include <sys/wait.h>
-#include <sys/utsname.h>
 
 #ifdef HAVE_UNISTD_H
 #  include <unistd.h>
@@ -33,82 +42,92 @@
 #  include <dirent.h>
 #endif
 #include <fcntl.h>
-
-#ifdef HAVE_SOCKS_H
-#include <socks.h>
+#ifdef WIN32
+#  include <win32-compat.h>
 #endif
-
-#include <netdb.h>
-#include <sys/socket.h>
-#include <signal.h>
-#include <sys/signal.h>
-#include <sys/param.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
 #include <glib.h>
-#include <gmodule.h>
+#ifdef HAVE_GMODULE
+#  include <gmodule.h>
+#endif
 
-typedef struct
-{
-    gushort family;
-#ifdef HAVE_IPV6
-    struct in6_addr addr;
+#ifdef USE_GC
+#  define g_free(x) G_STMT_START { (x) = NULL; } G_STMT_END
+#endif
+
+#if defined (UOFF_T_INT)
+typedef unsigned int uoff_t;
+#elif defined (UOFF_T_LONG)
+typedef unsigned long uoff_t;
+#elif defined (UOFF_T_LONG_LONG)
+typedef unsigned long long uoff_t;
 #else
-    struct in_addr addr;
+#  error uoff_t size not set
 #endif
-}
-IPADDR;
 
-#include "lib-config/irssi-config.h"
-#include "common-setup.h"
+/* input functions */
+#define G_INPUT_READ	(1 << 0)
+#define G_INPUT_WRITE	(1 << 1)
 
-/* GUI library must provide these functions: */
+typedef void (*GInputFunction) (void *data, GIOChannel *source, int condition);
 
-typedef enum
-{
-  GUI_INPUT_READ       = 1 << 0,
-  GUI_INPUT_WRITE      = 1 << 1,
-  GUI_INPUT_EXCEPTION  = 1 << 2
-} GUIInputCondition;
+int g_input_add(GIOChannel *source, int condition,
+		GInputFunction function, void *data);
+int g_input_add_full(GIOChannel *source, int priority, int condition,
+		     GInputFunction function, void *data);
 
-typedef void (*GUIInputFunction) (gpointer data, gint handle, GUIInputCondition condition);
-typedef gint (*GUITimeoutFunction) (gpointer data);
+/* return full path for ~/.irssi */
+const char *get_irssi_dir(void);
+/* return full path for ~/.irssi/config */
+const char *get_irssi_config(void);
 
-gint gui_input_add(gint handle, GUIInputCondition condition,
-                   GUIInputFunction function, gpointer data);
-void gui_input_remove(gint tag);
+/* max. size for %d */
+#define MAX_INT_STRLEN ((sizeof(int) * CHAR_BIT + 2) / 3 + 1)
 
-guint gui_timeout_add(guint32 interval, GUITimeoutFunction function, gpointer data);
-void gui_timeout_remove(gint tag);
+#define g_free_not_null(a) g_free(a)
 
-#ifdef MEM_DEBUG
+#define g_free_and_null(a) \
+	G_STMT_START { \
+	  if (a) { g_free(a); (a) = NULL; } \
+	} G_STMT_END
 
-void ig_mem_profile(void);
+/* ctype.h isn't safe with chars, use our own instead */
+#define i_toupper(x) toupper((int) (unsigned char) (x))
+#define i_tolower(x) tolower((int) (unsigned char) (x))
+#define i_isalnum(x) isalnum((int) (unsigned char) (x))
+#define i_isalpha(x) isalpha((int) (unsigned char) (x))
+#define i_isascii(x) isascii((int) (unsigned char) (x))
+#define i_isblank(x) isblank((int) (unsigned char) (x))
+#define i_iscntrl(x) iscntrl((int) (unsigned char) (x))
+#define i_isdigit(x) isdigit((int) (unsigned char) (x))
+#define i_isgraph(x) isgraph((int) (unsigned char) (x))
+#define i_islower(x) islower((int) (unsigned char) (x))
+#define i_isprint(x) isprint((int) (unsigned char) (x))
+#define i_ispunct(x) ispunct((int) (unsigned char) (x))
+#define i_isspace(x) isspace((int) (unsigned char) (x))
+#define i_isupper(x) isupper((int) (unsigned char) (x))
+#define i_isxdigit(x) isxdigit((int) (unsigned char) (x))
 
-void ig_set_data(gchar *data);
+typedef struct _IPADDR IPADDR;
+typedef struct _CONFIG_REC CONFIG_REC;
+typedef struct _CONFIG_NODE CONFIG_NODE;
 
-gpointer ig_malloc(gint size, gchar *file, gint line);
-gpointer ig_malloc0(gint size, gchar *file, gint line);
-gpointer ig_realloc(gpointer mem, gulong size, gchar *file, gint line);
-gchar *ig_strdup(const char *str, gchar *file, gint line);
-gchar *ig_strconcat(const char *str, ...);
-gchar *ig_strdup_printf(const gchar *format, ...) G_GNUC_PRINTF (1, 2);
-void ig_free(gpointer p);
-GString *ig_string_new(gchar *str);
-void ig_string_free(GString *str, gboolean freeit);
+typedef struct _LINEBUF_REC LINEBUF_REC;
+typedef struct _NET_SENDBUF_REC NET_SENDBUF_REC;
+typedef struct _RAWLOG_REC RAWLOG_REC;
 
-#define g_malloc(a) ig_malloc(a, __FILE__, __LINE__)
-#define g_malloc0(a) ig_malloc0(a, __FILE__, __LINE__)
-#define g_realloc(a,b) ig_realloc(a, b, __FILE__, __LINE__)
-#define g_strdup(a) ig_strdup(a, __FILE__, __LINE__)
-#define g_strconcat ig_strconcat
-#define g_strdup_printf ig_strdup_printf
-#define g_strdup_vprintf ig_strdup_vprintf
-#define g_free ig_free
-#define g_string_new ig_string_new
-#define g_string_free ig_string_free
+typedef struct _CHAT_PROTOCOL_REC CHAT_PROTOCOL_REC;
+typedef struct _CHATNET_REC CHATNET_REC;
+typedef struct _SERVER_REC SERVER_REC;
+typedef struct _WI_ITEM_REC WI_ITEM_REC;
+typedef struct _CHANNEL_REC CHANNEL_REC;
+typedef struct _QUERY_REC QUERY_REC;
+typedef struct _NICK_REC NICK_REC;
 
-#endif
+typedef struct _SERVER_CONNECT_REC SERVER_CONNECT_REC;
+typedef struct _SERVER_SETUP_REC SERVER_SETUP_REC;
+typedef struct _CHANNEL_SETUP_REC CHANNEL_SETUP_REC;
+
+typedef struct _WINDOW_REC WINDOW_REC;
 
 #endif

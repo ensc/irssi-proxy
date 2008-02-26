@@ -336,11 +336,11 @@ static GIOChannel *irssi_ssl_get_iochannel(GIOChannel *handle, const char *mycer
 	return gchan;
 }
 
-GIOChannel *net_connect_ip_ssl(IPADDR *ip, int port, IPADDR *my_ip, const char *cert, const char *pkey, const char *cafile, const char *capath, gboolean verify)
+GIOChannel *net_connect_proxy_ssl(struct network_proxy const *proxy, char const *host, int port, IPADDR *ip, IPADDR *my_ip, const char *cert, const char *pkey, const char *cafile, const char *capath, gboolean verify)
 {
 	GIOChannel *handle, *ssl_handle;
 
-	handle = net_connect_ip(ip, port, my_ip);
+	handle = net_connect_proxy(proxy, host, port, ip, my_ip);
 	if (handle == NULL)
 		return NULL;
 	ssl_handle  = irssi_ssl_get_iochannel(handle, cert, pkey, cafile, capath, verify);
